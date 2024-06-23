@@ -1,4 +1,10 @@
 .main {
   position: relative;
   transform: translateY(-10rem);
+
+  &__addition {
+    color: var(--color-normal-text);
+    text-align: center;
+    margin-top: var(--5xl-fs);
+  }
 }

@@ -1,0 +1,26 @@
+@use "./../../abstracts/mixins" as *;
+@use "./../../abstracts/variables" as *;
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: var(--2xl-fs);
+
+  @include media($bp-mobile) {
+    display: none;
+  }
+
+  &--mobile {
+    display: none;
+
+    @include media($bp-mobile) {
+      margin-top: var(--xl-fs);
+      display: flex;
+      justify-content: center;
+      padding: var(--large-fs) var(--2xl-fs);
+
+      background-color: var(--color-element-background);
+      border: 1px solid var(--color-border);
+    }
+  }
+}

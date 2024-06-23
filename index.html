@@ -91,30 +91,47 @@
             <p class="form__error">Input cant be empty!</p>
           </form>
           <div class="todo-list">
-            <div class="todo-list__item todo-list__item--complete">
-              <button
-                class="btn btn--edit btn--complete"
-                aria-label="Change todo status"
-              >
-                <img
-                  src="./assets/images/icon-check.svg"
-                  alt=""
-                  class="btn__image"
-                />
-              </button>
-              <p class="todo-list__item-title">
-                Complete online JavaScript course
-              </p>
+            <div class="todo-list__container">
+              <div class="todo-list__item todo-list__item--complete">
+                <button
+                  class="btn btn--edit btn--complete"
+                  aria-label="Change todo status"
+                >
+                  <img
+                    src="./assets/images/icon-check.svg"
+                    alt=""
+                    class="btn__image"
+                  />
+                </button>
+                <p class="todo-list__item-title">
+                  Complete online JavaScript course
+                </p>
+              </div>
+              <div class="todo-list__item">
+                <button class="btn btn--edit" aria-label="Change todo status">
+                  &nbsp;
+                </button>
+                <p class="todo-list__item-title">
+                  Complete online JavaScript course
+                </p>
+              </div>
             </div>
-            <div class="todo-list__item">
-              <button class="btn btn--edit" aria-label="Change todo status">
-                &nbsp;
-              </button>
-              <p class="todo-list__item-title">
-                Complete online JavaScript course
-              </p>
+            <div class="todo-list__statistics">
+              <p class="todo-list__items">5 items left</p>
+              <div class="filters">
+                <button class="btn btn--filter">All</button>
+                <button class="btn btn--filter">Active</button>
+                <button class="btn btn--filter">Completed</button>
+              </div>
+              <button class="btn btn--filter">Clear Completed</button>
+            </div>
+            <div class="filters filters--mobile">
+              <button class="btn btn--filter">All</button>
+              <button class="btn btn--filter">Active</button>
+              <button class="btn btn--filter">Completed</button>
             </div>
           </div>
+          <p class="main__addition">Drag and drop to reorder list</p>
         </div>
       </main>
     </div>

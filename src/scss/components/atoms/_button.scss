@@ -80,4 +80,19 @@
       display: none;
     }
   }
+
+  &--filter {
+    color: var(--color-normal-text);
+
+    transition: var(--transition-duration);
+
+    &:focus {
+      outline: none;
+    }
+
+    &:hover,
+    &:focus {
+      color: var(--color-primary);
+    }
+  }
 }

@@ -6,6 +6,7 @@
   flex-direction: column;
   gap: 2px;
   border-radius: 4px;
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
 
   &__item {
     display: flex;
@@ -30,5 +31,21 @@
   &__item--complete &__item-title {
     text-decoration: line-through;
     color: var(--color-done-element);
+  }
+
+  &__statistics {
+    padding: var(--large-fs) var(--2xl-fs);
+
+    background-color: var(--color-element-background);
+    border: 1px solid var(--color-border);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--xl-fs);
+  }
+
+  &__items {
+    color: var(--color-normal-text);
   }
 }
