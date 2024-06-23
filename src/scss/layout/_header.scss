@@ -26,3 +26,10 @@ body[data-theme="light"] {
     }
   }
 }
+
+.sub-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--3xl-fs);
+}

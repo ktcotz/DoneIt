@@ -1,0 +1,14 @@
+.btn {
+  cursor: pointer;
+  background-color: transparent;
+  font-family: inherit;
+  border: none;
+
+  &--theme {
+    transition: var(--transition-duration);
+    &:hover,
+    &:focus {
+      transform: scale(1.05);
+    }
+  }
+}

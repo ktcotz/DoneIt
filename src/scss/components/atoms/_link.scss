@@ -1,0 +1,25 @@
+@use "./../../abstracts/mixins" as *;
+@use "./../../abstracts/variables" as *;
+
+.link {
+  &:visited,
+  &:link {
+    display: inline-block;
+    text-decoration: none;
+  }
+
+  &--logo {
+    &:link,
+    &:visited {
+      color: var(--color-neutral);
+      text-transform: uppercase;
+      font-size: var(--5xl-fs);
+      letter-spacing: var(--large-fs);
+      font-weight: 500;
+
+      @include media($bp-medium) {
+        font-size: var(--4xl-fs);
+      }
+    }
+  }
+}

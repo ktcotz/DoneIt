@@ -5,4 +5,7 @@
 @use "./layout/header" as *;
 @use "./layout/main" as *;
 
+@use "./components/atoms/button" as *;
+@use "./components/atoms/link" as *;
 @use "./components/molecules/wrapper" as *;
+@use "./components/molecules/form" as *;
