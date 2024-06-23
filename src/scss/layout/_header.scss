@@ -1,0 +1,28 @@
+@use "./../abstracts/mixins" as *;
+@use "./../abstracts/variables" as *;
+
+.header {
+  --height: 20rem;
+  --url: url("./assets/images/bg-desktop-dark.jpg");
+
+  height: var(--height);
+  background-image: var(--url);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: left center;
+
+  @include media($bp-medium) {
+    --height: 15rem;
+    --url: url("./assets/images/bg-mobile-dark.jpg");
+  }
+}
+
+body[data-theme="light"] {
+  .header {
+    --url: url("./assets/images/bg-desktop-light.jpg");
+
+    @include media($bp-medium) {
+      --url: url("./assets/images/bg-mobile-light.jpg");
+    }
+  }
+}

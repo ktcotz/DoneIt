@@ -2,3 +2,7 @@
 @use "./base/reset" as *;
 
 @use "./pages/home" as *;
+@use "./layout/header" as *;
+@use "./layout/main" as *;
+
+@use "./components/molecules/wrapper" as *;

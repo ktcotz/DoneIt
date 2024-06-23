@@ -1,0 +1,7 @@
+.wrapper {
+  --width: 51.25rem;
+
+  max-width: var(--width);
+  margin: 0 auto;
+  padding: 0 var(--large-fs);
+}
