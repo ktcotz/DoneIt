@@ -1,3 +1,33 @@
 :root {
+  --color-background: #171823;
+  --color-primary: #3a7cfd;
+
+  --color-neutral: #ffffff;
+  --color-border: #e3e4f1;
+  --color-element-background: #25273d;
+  --color-done-element: #4d5067;
+  --color-normal-text: #c8cbe7;
+  --color-filter: #e3e4f1;
+
   --font-family-primary: "Josefin Sans", sans-serif;
+  --transition-duration: 300ms;
+
+  --5xl-fs: 2.986rem;
+  --4xl-fs: 2.488rem;
+  --3xl-fs: 2.074rem;
+  --2xl-fs: 1.728rem;
+  --xl-fs: 1.44rem;
+  --large-fs: 1.2rem;
+  --default-fs: 1rem;
+  --small-fs: 0.833rem;
+  --smallest-fs: 0.694rem;
+}
+
+body[data-theme="light"] {
+  --color-background: #fafafa;
+  --color-border: #393a4b;
+  --color-element-background: #ffffff;
+  --color-done-element: #d1d2da;
+  --color-normal-text: #494c6b;
+  --color-filter: #494c6b;
 }
