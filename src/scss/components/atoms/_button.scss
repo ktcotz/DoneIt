@@ -26,6 +26,21 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
+    transition: var(--transition-duration);
+
+    &:focus {
+      outline: 2px solid var(--color-border);
+      outline-offset: 2px;
+    }
+  }
+
+  &--complete {
+    background-image: linear-gradient(
+      to right bottom,
+      var(--color-primary),
+      var(--color-secondary)
+    );
   }
 
   &--submit {
@@ -46,6 +61,11 @@
       outline: 2px solid var(--color-background);
       outline-offset: 2px;
     }
+
+    &:hover {
+      --color-background: var(--color-background-hover);
+    }
+
     @include media($bp-mobile) {
       padding: var(--smallest-fs) var(--small-fs);
     }

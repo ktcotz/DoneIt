@@ -1,6 +1,8 @@
 :root {
   --color-background: #171823;
+  --color-background-hover: #151620;
   --color-primary: #3a7cfd;
+  --color-secondary: #c058f3;
 
   --color-neutral: #ffffff;
 
@@ -27,6 +29,7 @@
 
 body[data-theme="light"] {
   --color-background: #fafafa;
+  --color-background-hover: #fbfbfb;
   --color-border: #e3e4f1;
   --color-element-background: #ffffff;
   --color-done-element: #d1d2da;
