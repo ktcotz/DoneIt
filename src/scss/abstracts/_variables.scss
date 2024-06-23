@@ -3,11 +3,13 @@
   --color-primary: #3a7cfd;
 
   --color-neutral: #ffffff;
-  --color-border: #e3e4f1;
+
+  --color-border: #393a4b;
   --color-element-background: #25273d;
   --color-done-element: #4d5067;
   --color-normal-text: #c8cbe7;
   --color-filter: #e3e4f1;
+  --color-error: #f87171;
 
   --font-family-primary: "Josefin Sans", sans-serif;
   --transition-duration: 300ms;
@@ -25,11 +27,13 @@
 
 body[data-theme="light"] {
   --color-background: #fafafa;
-  --color-border: #393a4b;
+  --color-border: #e3e4f1;
   --color-element-background: #ffffff;
   --color-done-element: #d1d2da;
   --color-normal-text: #494c6b;
   --color-filter: #494c6b;
+  --color-error: #dc2626;
 }
 
 $bp-medium: 48rem;
+$bp-mobile: 31.25rem;

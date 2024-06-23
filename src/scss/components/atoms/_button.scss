@@ -1,3 +1,6 @@
+@use "./../../abstracts/mixins" as *;
+@use "./../../abstracts/variables" as *;
+
 .btn {
   cursor: pointer;
   background-color: transparent;
@@ -9,6 +12,52 @@
     &:hover,
     &:focus {
       transform: scale(1.05);
+    }
+  }
+
+  &--edit {
+    --size: 2rem;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    aspect-ratio: 1/1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &--submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+
+    padding: var(--smallest-fs) var(--xl-fs);
+    background-color: var(--color-background);
+    border-radius: 9px;
+    color: var(--color-filter);
+    font-weight: 500;
+
+    transition: var(--transition-duration);
+
+    &:focus {
+      outline: 2px solid var(--color-background);
+      outline-offset: 2px;
+    }
+    @include media($bp-mobile) {
+      padding: var(--smallest-fs) var(--small-fs);
+    }
+  }
+
+  &__icon {
+    --size_icon: 1rem;
+    width: var(--size_icon);
+    height: var(--size_icon);
+    fill: var(--color-filter);
+    @include media($bp-mobile) {
+      display: none;
     }
   }
 }

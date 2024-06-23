@@ -1,0 +1,73 @@
+@use "./../../abstracts/mixins" as *;
+@use "./../../abstracts/variables" as *;
+
+.form {
+  background-color: var(--color-element-background);
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  gap: 8px;
+  border: 1px solid var(--color-border);
+  padding: 4px 0;
+
+  &__content {
+    display: flex;
+    align-items: center;
+    padding: 0 var(--2xl-fs);
+    border-bottom: 1px solid var(--color-border);
+    @include media($bp-mobile) {
+      padding: 0 var(--default-fs);
+    }
+  }
+
+  &__input-container {
+    position: relative;
+    flex: 1;
+  }
+
+  &__input {
+    font-family: inherit;
+    padding: var(--large-fs);
+    background-color: transparent;
+    border: none;
+    width: 100%;
+    font-size: var(--large-fs);
+    color: var(--color-normal-text);
+    @include media($bp-mobile) {
+      font-size: var(--small-fs);
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__label {
+    position: absolute;
+    top: 50%;
+    left: var(--large-fs);
+    transform: translateY(-50%);
+    color: var(--color-normal-text);
+    font-size: var(--large-fs);
+
+    transition: var(--transition-duration);
+    @include media($bp-mobile) {
+      font-size: var(--small-fs);
+    }
+  }
+
+  &__input:valid + &__label,
+  &__input:focus + &__label {
+    font-size: var(--smallest-fs);
+    top: 20%;
+  }
+
+  &__error {
+    padding: 4px 0;
+    margin-left: var(--2xl-fs);
+    color: var(--color-error);
+    @include media($bp-mobile) {
+      font-size: var(--small-fs);
+    }
+  }
+}
