@@ -1,10 +1,4 @@
-/*
-    FLOW:
-
-    1. Pobieram user preferences.
-     Jeżeli true to ustaw na dark mode. Jeżeli nie to ustaw na light mode.
-
-*/
+import { Storage } from "./Storage";
 
 enum Theme {
   Light = "light",
@@ -15,9 +9,22 @@ export class ThemeProvider {
   private themeButton = document.querySelector("[data-theme-button]");
   private themeButtonIcon = document.querySelector("[data-theme-icon]");
   private currentTheme = Theme.Dark;
+  private storage = new Storage<Theme>();
+  private storage_key = "theme";
 
   initialize() {
     this.addEventListeners();
+    this.getStoragedTheme();
+  }
+
+  getStoragedTheme() {
+    const storagedTheme = this.storage.getFromStorage(this.storage_key);
+
+    if (storagedTheme) {
+      this.currentTheme = storagedTheme === "light" ? Theme.Light : Theme.Dark;
+      return this.setUITheme();
+    }
+
     this.getUserPreferences();
   }
 
@@ -61,6 +68,7 @@ export class ThemeProvider {
       this.currentTheme === Theme.Dark ? Theme.Light : Theme.Dark;
 
     this.currentTheme = changedTheme;
+    this.storage.saveToStorage(this.storage_key, this.currentTheme);
 
     this.setUITheme();
   }
