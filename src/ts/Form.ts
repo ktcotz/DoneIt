@@ -23,9 +23,15 @@ export class Form {
     this.addEventListeners();
   }
 
+  private hideError() {
+    this.formElement?.classList.remove("form--error");
+    this.ui.clearElement(this.formError);
+  }
+
   private setFormError(message: string) {
     if (!this.formError) return;
 
+    this.formElement?.classList.add("form--error");
     this.formError.textContent = message;
   }
 
@@ -38,7 +44,7 @@ export class Form {
     try {
       const validTodoData = TodoSchema.parse({ title, status });
 
-      this.ui.clearElement(this.formError);
+      this.hideError();
     } catch (err: unknown) {
       if (err instanceof z.ZodError) {
         const message = err.issues.map((issue) => issue.message).join("");
