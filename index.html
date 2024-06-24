@@ -54,26 +54,31 @@
               />
             </button>
           </header>
-          <form action="#" class="form">
+          <form action="#" class="form" data-form>
             <div class="form__content">
               <button
-                class="btn btn--edit btn--complete"
-                aria-label="Change todo status"
+                class="btn btn--edit"
+                aria-label="Change todo status to complete"
+                type="button"
+                data-status="active"
+                data-form-todo-status
               >
-                <img
-                  src="./assets/images/icon-check.svg"
-                  alt=""
-                  class="btn__image"
-                />
+                &nbsp;
               </button>
               <div class="form__input-container">
-                <input type="text" class="form__input" id="todo" required />
+                <input
+                  type="text"
+                  class="form__input"
+                  id="todo"
+                  data-form-todo-title
+                  required
+                />
                 <label for="todo" class="form__label"
                   >Create a new todo...</label
                 >
               </div>
 
-              <button class="btn btn--submit">
+              <button class="btn btn--submit" type="submit">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -93,7 +98,7 @@
                 <span>Add todo</span>
               </button>
             </div>
-            <p class="form__error">Input cant be empty!</p>
+            <p class="form__error" data-form-error>Input cant be empty!</p>
           </form>
           <div class="todo-list">
             <div class="todo-list__container">

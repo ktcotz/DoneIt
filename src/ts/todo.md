@@ -1,6 +1,3 @@
-1. Togglowanie pomiędzy light/dark theme.
-   a. Local Storage
-   b. User Preferences
 2. Dodawanie nowych zadań
    a. Walidacja danych
 3. Edycja zadań
