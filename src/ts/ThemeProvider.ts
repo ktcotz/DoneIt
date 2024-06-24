@@ -14,14 +14,14 @@ export class ThemeProvider {
 
   initialize() {
     this.addEventListeners();
-    this.getStoragedTheme();
+    this.getStorageTheme();
   }
 
-  getStoragedTheme() {
-    const storagedTheme = this.storage.getFromStorage(this.storage_key);
+  getStorageTheme() {
+    const storageTheme = this.storage.getFromStorage(this.storage_key);
 
-    if (storagedTheme) {
-      this.currentTheme = storagedTheme === "light" ? Theme.Light : Theme.Dark;
+    if (storageTheme) {
+      this.currentTheme = storageTheme;
       return this.setUITheme();
     }
 
