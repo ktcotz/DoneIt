@@ -1,4 +1,4 @@
-import { Storage } from "./Storage";
+import { Storage } from "../Storage/Storage";
 
 enum Theme {
   Light = "light",
@@ -17,7 +17,7 @@ export class ThemeProvider {
     this.getStorageTheme();
   }
 
-  getStorageTheme() {
+  private getStorageTheme() {
     const storageTheme = this.storage.getFromStorage(this.storage_key);
 
     if (storageTheme) {

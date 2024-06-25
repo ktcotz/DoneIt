@@ -1,7 +1,8 @@
 import { z } from "zod";
-import { TodoStatus } from "./TodoList";
 import { UI } from "./UI";
-import { TodoSchema } from "./schema/TodoSchema";
+import { TodoSchema } from "../Todo/TodoSchema";
+import { TodoStatus } from "../Todo/TodoList";
+import { TodoListServices } from "../Todo/TodoListServices";
 
 export class Form {
   private formElement = document.querySelector("[data-form]");
@@ -15,12 +16,15 @@ export class Form {
     "[data-form-todo-title]"
   );
 
+  private todoStatus = TodoStatus.Active;
+
   private ui = new UI();
 
-  private todoStatus = "active";
+  constructor(private todoListServices: TodoListServices) {}
 
   initialize() {
     this.addEventListeners();
+    this.ui.setElementFocus(this.todoTitleElement);
   }
 
   private hideError() {
@@ -44,7 +48,7 @@ export class Form {
     try {
       const validTodoData = TodoSchema.parse({ title, status });
 
-      this.hideError();
+      return validTodoData;
     } catch (err: unknown) {
       if (err instanceof z.ZodError) {
         const message = err.issues.map((issue) => issue.message).join("");
@@ -53,10 +57,26 @@ export class Form {
     }
   }
 
+  private handleAddTodo() {
+    const data = this.getFormValues();
+
+    if (!data) return;
+
+    this.todoListServices.addTodo(data);
+
+    this.hideError();
+
+    if (!this.todoTitleElement) return;
+    this.ui.clearInputs([this.todoTitleElement]);
+  }
+
   private changeTodoStatus() {
     if (!this.todoStatusElement) return;
 
-    this.todoStatus = this.todoStatus === "active" ? "complete" : "active";
+    this.todoStatus =
+      this.todoStatus === TodoStatus.Active
+        ? TodoStatus.Complete
+        : TodoStatus.Active;
 
     this.ui.manageTodoButtonUI(this.todoStatusElement, this.todoStatus);
   }
@@ -65,7 +85,7 @@ export class Form {
     this.formElement?.addEventListener("submit", (ev) => {
       ev.preventDefault();
 
-      this.getFormValues();
+      this.handleAddTodo();
     });
 
     this.todoStatusElement?.addEventListener("click", () => {

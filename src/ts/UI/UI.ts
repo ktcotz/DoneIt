@@ -1,5 +1,7 @@
+import { TodoStatus } from "../Todo/TodoList";
+
 export class UI {
-  manageTodoButtonUI(button: HTMLButtonElement, status: string) {
+  manageTodoButtonUI(button: HTMLButtonElement, status: TodoStatus) {
     button.setAttribute(
       "aria-label",
       `Change todo status to ${status === "active" ? "complete" : "active"}`
@@ -20,5 +22,15 @@ export class UI {
     if (!element) return;
 
     element.innerHTML = "";
+  }
+
+  clearInputs(inputs: HTMLInputElement[]) {
+    inputs.forEach((input) => (input.value = ""));
+  }
+
+  setElementFocus<T extends HTMLElement>(element: T | null) {
+    if (!element) return;
+
+    element.focus();
   }
 }

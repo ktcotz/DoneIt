@@ -1,4 +1,16 @@
 import "./scss/style.scss";
-import { App } from "./ts/app";
+import { Form } from "./ts/UI/Form";
+import { ThemeProvider } from "./ts/Theme/ThemeProvider";
+import { TodoList } from "./ts/Todo/TodoList";
+import { TodoListServices } from "./ts/Todo/TodoListServices";
 
-new App().initialize();
+const todoList = new TodoList();
+const todoServices = new TodoListServices(todoList);
+const form = new Form(todoServices);
+
+const init = () => {
+  new ThemeProvider().initialize();
+  form.initialize();
+};
+
+init();

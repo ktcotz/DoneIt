@@ -9,3 +9,5 @@ export const TodoSchema = z.object({
     message: "Set status only between active and complete!",
   }),
 });
+
+export type Todo = z.infer<typeof TodoSchema>;
