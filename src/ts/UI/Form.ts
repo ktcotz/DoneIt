@@ -8,6 +8,8 @@ export class Form {
   private formElement = document.querySelector("[data-form]");
   private formError =
     document.querySelector<HTMLParagraphElement>("[data-form-error]");
+  private submitButton =
+    document.querySelector<HTMLButtonElement>("[data-form-submit]");
 
   private todoStatusElement = document.querySelector<HTMLButtonElement>(
     "[data-form-todo-status]"
@@ -57,6 +59,24 @@ export class Form {
     }
   }
 
+  private setSuccessSubmitButton() {
+    if (!this.submitButton) return;
+
+    const content = this.submitButton.querySelector("[data-submit-content]");
+
+    if (!content) return;
+
+    content.textContent = "Success!";
+    this.submitButton?.classList.add("btn--success");
+
+    const SUCCESS_SECONDS_TIMEOUT = 1000;
+
+    setTimeout(() => {
+      content.textContent = "Add todo";
+      this.submitButton?.classList.remove("btn--success");
+    }, SUCCESS_SECONDS_TIMEOUT);
+  }
+
   private handleAddTodo() {
     const data = this.getFormValues();
 
@@ -65,6 +85,7 @@ export class Form {
     this.todoListServices.addTodo(data);
 
     this.hideError();
+    this.setSuccessSubmitButton();
 
     if (!this.todoTitleElement) return;
     this.ui.clearInputs([this.todoTitleElement]);

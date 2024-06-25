@@ -71,6 +71,14 @@
     }
   }
 
+  &--success {
+    background-color: var(--color-success);
+    &:focus {
+      outline: 2px solid var(--color-success);
+      outline-offset: 2px;
+    }
+  }
+
   &__icon {
     --size_icon: 1rem;
     width: var(--size_icon);
