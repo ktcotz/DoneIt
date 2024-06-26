@@ -133,4 +133,8 @@
       --color-error: #b91c1c;
     }
   }
+
+  &__image {
+    pointer-events: none;
+  }
 }

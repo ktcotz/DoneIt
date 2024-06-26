@@ -4,18 +4,19 @@ export class Todo {
   constructor(private todo: TodoSchemaType) {}
 
   renderContent() {
-    console.log(this.todo);
     const todoContent = /* HTML */ `
       <div
         class="todo-list__item ${this.todo.status === "complete"
           ? "todo-list__item--complete"
           : ""}"
+        data-item="${this.todo.id}"
       >
         <button
           class="btn btn--edit ${this.todo.status === "complete"
             ? "btn--complete"
             : ""}"
           aria-label="Change todo status"
+          data-handle-item="${this.todo.id}"
         >
           ${this.todo.status === "complete"
             ? `<img src="./assets/images/icon-check.svg" alt="" class="btn__image" />`

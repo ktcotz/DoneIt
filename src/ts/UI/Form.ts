@@ -48,7 +48,11 @@ export class Form {
     const status = this.todoStatus;
 
     try {
-      const validTodoData = TodoSchema.parse({ title, status });
+      const validTodoData = TodoSchema.parse({
+        title,
+        status,
+        id: Math.random().toString(),
+      });
 
       return validTodoData;
     } catch (err: unknown) {

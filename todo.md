@@ -1,5 +1,3 @@
-1. Stworzenie modala + responsywność + UX.
-
 2. Edycja zadań
    a. Edycja poprzez kliknięcie w buttona (EDYCJA STATUSU).
    b. Edycja modalem, (zmiana nazwy i statusu).

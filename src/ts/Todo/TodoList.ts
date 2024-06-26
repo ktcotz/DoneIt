@@ -17,15 +17,29 @@ export class TodoList extends UI {
 
   constructor() {
     super();
-    this.getInitialTodos();
 
+    this.addEventListeners();
+
+    this.getInitialTodos();
     this.renderTodos();
+  }
+
+  private addEventListeners() {
+    this.parentElement?.addEventListener("click", ({ target }) => {
+      if (!(target instanceof HTMLButtonElement)) return;
+
+      if (target.classList.contains("btn--edit")) {
+        const id = target.getAttribute("data-handle-item");
+
+        this.editTodo(id);
+      }
+    });
   }
 
   private getInitialTodos() {
     const todos = this.storage.getFromStorage(this.storage_key);
 
-    if(!todos) return;
+    if (!todos) return;
 
     this.todos = todos;
   }
@@ -59,6 +73,29 @@ export class TodoList extends UI {
 
   addTodo(data: TodoSchemaType) {
     this.todos.push(data);
+    this.storage.saveToStorage(this.storage_key, this.todos);
+    this.renderTodos();
+  }
+
+  editTodo(id: string | null) {
+    if (!id) return;
+
+    const todo = this.todos.find((todo) => todo.id === id);
+
+    if (!todo) return;
+
+    this.todos = this.todos.map((todo) =>
+      todo.id === id
+        ? {
+            ...todo,
+            status:
+              todo.status === "active"
+                ? TodoStatus.Complete
+                : TodoStatus.Active,
+          }
+        : todo
+    );
+
     this.storage.saveToStorage(this.storage_key, this.todos);
     this.renderTodos();
   }
