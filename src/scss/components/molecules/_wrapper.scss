@@ -2,6 +2,11 @@
   --width: 51.25rem;
 
   max-width: var(--width);
+  width: 100%;
   margin: 0 auto;
   padding: 0 var(--large-fs);
+
+  &--modal {
+    --width: 35rem;
+  }
 }

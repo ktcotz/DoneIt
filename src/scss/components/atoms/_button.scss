@@ -43,6 +43,12 @@
     );
   }
 
+  &--modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   &--submit {
     display: flex;
     align-items: center;
@@ -101,6 +107,30 @@
     &:hover,
     &:focus {
       color: var(--color-primary);
+    }
+  }
+
+  &--general {
+    padding: var(--small-fs) var(--default-fs);
+    border-radius: 4px;
+    font-weight: 500;
+    transition: var(--transition-duration);
+  }
+
+  &--close {
+    background-color: var(--color-background);
+    color: var(--color-neutral);
+    &:hover {
+      background-color: var(--color-background-hover);
+    }
+  }
+
+  &--confirm {
+    --color-error: #dc2626;
+    background-color: var(--color-error);
+    color: var(--color-neutral);
+    &:hover {
+      --color-error: #b91c1c;
     }
   }
 }
