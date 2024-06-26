@@ -10,4 +10,4 @@ export const TodoSchema = z.object({
   }),
 });
 
-export type Todo = z.infer<typeof TodoSchema>;
+export type TodoSchemaType = z.infer<typeof TodoSchema>;

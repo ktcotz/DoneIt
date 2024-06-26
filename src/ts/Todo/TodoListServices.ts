@@ -1,10 +1,10 @@
 import { TodoList } from "./TodoList";
-import { Todo } from "./TodoSchema";
+import { TodoSchemaType } from "./TodoSchema";
 
 export class TodoListServices {
   constructor(private todoList: TodoList) {}
 
-  addTodo(data: Todo) {
+  addTodo(data: TodoSchemaType) {
     return this.todoList.addTodo(data);
   }
 }
