@@ -13,5 +13,8 @@
     "typescript": "^5.2.2",
     "vite": "^5.3.1",
     "zod": "^3.23.8"
+  },
+  "dependencies": {
+    "focus-trap": "^7.5.4"
   }
 }
