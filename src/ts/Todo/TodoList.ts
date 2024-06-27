@@ -1,4 +1,5 @@
 import { Storage } from "../Storage/Storage";
+import { Modal } from "../UI/Modal";
 import { UI } from "../UI/UI";
 import { Todo } from "./Todo";
 import { TodoSchemaType } from "./TodoSchema";
@@ -14,6 +15,7 @@ export class TodoList extends UI {
   private todos: TodoSchemaType[] = [];
   private storage = new Storage<TodoSchemaType[]>();
   private storage_key = "todos";
+  private modal = new Modal();
 
   constructor() {
     super();
@@ -29,6 +31,12 @@ export class TodoList extends UI {
       if (!(target instanceof HTMLButtonElement)) return;
 
       if (target.classList.contains("btn--edit")) {
+        const id = target.getAttribute("data-handle-item");
+
+        this.editTodoStatus(id);
+      }
+
+      if (target.classList.contains("btn--global-edit")) {
         const id = target.getAttribute("data-handle-item");
 
         this.editTodo(id);
@@ -77,7 +85,7 @@ export class TodoList extends UI {
     this.renderTodos();
   }
 
-  editTodo(id: string | null) {
+  editTodoStatus(id: string | null) {
     if (!id) return;
 
     const todo = this.todos.find((todo) => todo.id === id);
@@ -98,5 +106,11 @@ export class TodoList extends UI {
 
     this.storage.saveToStorage(this.storage_key, this.todos);
     this.renderTodos();
+  }
+
+  editTodo(id: string | null) {
+    if (!id) return;
+
+    this.modal.openModal();
   }
 }

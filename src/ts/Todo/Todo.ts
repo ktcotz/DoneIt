@@ -23,6 +23,15 @@ export class Todo {
             : "&nbsp;"}
         </button>
         <p class="todo-list__item-title">${this.todo.title}</p>
+        <div class="todo-list__actions">
+          <button
+            class="btn btn--action btn--global-edit"
+            aria-label="Edit todo"
+            data-handle-item="${this.todo.id}"
+          >
+            <img src="./assets/images/icon-edit.svg" alt="" class="btn__icon" />
+          </button>
+        </div>
       </div>
     `;
 
