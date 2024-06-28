@@ -46,7 +46,8 @@
   }
 
   &__input {
-    background-color: #171823;
+    background-color: var(--color-element-background);
+    border: 1px solid var(--color-border);
   }
 
   &__description {

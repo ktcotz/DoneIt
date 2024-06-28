@@ -67,7 +67,7 @@ export class Modal extends UI {
     confirmFunction: (id?: string) => void;
   }) {
     this.clearElement(this.modalDescription);
-
+    document.body.setAttribute("data-modal", "true");
     this.parentElement?.classList.remove("modal-hidden");
 
     if (!this.modalTitle) return;
@@ -85,6 +85,8 @@ export class Modal extends UI {
 
   closeModal() {
     this.parentElement?.classList.add("modal-hidden");
+    document.body.removeAttribute("data-modal");
+
     this.trap?.deactivate();
   }
 

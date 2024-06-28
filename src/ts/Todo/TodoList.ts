@@ -2,7 +2,7 @@ import { Storage } from "../Storage/Storage";
 import { Modal } from "../UI/Modal";
 import { UI } from "../UI/UI";
 import { Todo } from "./Todo";
-import { TodoSchema, TodoSchemaType } from "./TodoSchema";
+import { TodoSchemaType } from "./TodoSchema";
 import { selectOptions } from "./data";
 import { isValidStatus } from "./helpers";
 
