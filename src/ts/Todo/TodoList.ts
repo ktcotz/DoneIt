@@ -6,6 +6,7 @@ import { Todo } from "./Todo";
 import { TodoSchemaType } from "./TodoSchema";
 import { selectOptions } from "./data";
 import { isValidStatus } from "./helpers";
+import Sortable from "sortablejs";
 
 export enum TodoStatus {
   Active = "active",
@@ -27,8 +28,39 @@ export class TodoList extends UI {
     super();
 
     this.addEventListeners();
+    this.initSortable();
 
     this.getInitialTodos();
+    this.renderTodos();
+  }
+
+  private initSortable() {
+    if (!this.todosContainer) return;
+
+    Sortable.create(this.todosContainer, {
+      animation: 150,
+      onEnd: () => {
+        this.reorderTodosInStorage();
+      },
+    });
+  }
+
+  private reorderTodosInStorage() {
+    if (!this.todosContainer) return;
+
+    const todoItems = [...this.todosContainer.querySelectorAll("[data-item]")];
+
+    const todoIds = todoItems.map(
+      (todoItem) => todoItem.getAttribute("data-item") as NonNullable<string>
+    );
+
+    const todos = todoIds.map((todoID) => {
+      const todo = this.getTodoByID(todoID) as TodoSchemaType;
+      return todo;
+    });
+
+    this.todos = todos;
+    this.storage.saveToStorage(this.storage_key, this.todos);
     this.renderTodos();
   }
 
@@ -83,16 +115,12 @@ export class TodoList extends UI {
   private renderTodos() {
     this.clearElement(this.todosContainer);
 
-    console.log(this.filter.global_filter);
-
     const filteredTodos =
       this.filter.global_filter === "all"
         ? this.todos
         : this.todos.filter(
             (todo) => todo.status === this.filter.global_filter
           );
-
-    console.log(filteredTodos);
 
     if (filteredTodos.length === 0) {
       return this.setEmptyTodosContainer();
@@ -102,7 +130,7 @@ export class TodoList extends UI {
 
     filteredTodos.forEach((todo) => {
       this.todosContainer?.insertAdjacentHTML(
-        "afterbegin",
+        "beforeend",
         new Todo(todo).renderContent()
       );
     });
