@@ -100,7 +100,7 @@
             </div>
             <p class="form__error" data-form-error>&nbsp;</p>
           </form>
-          <div class="todo-list">
+          <div class="todo-list" data-list>
             <div class="todo-list__container" data-container>
               <div class="todo-list__item todo-list__item--complete">
                 <button
@@ -127,13 +127,17 @@
               </div>
             </div>
             <div class="todo-list__statistics">
-              <p class="todo-list__items">5 items left</p>
+              <p class="todo-list__items">
+                <span data-items-left>0</span> items left
+              </p>
               <div class="filters">
                 <button class="btn btn--filter">All</button>
                 <button class="btn btn--filter">Active</button>
                 <button class="btn btn--filter">Completed</button>
               </div>
-              <button class="btn btn--filter">Clear Completed</button>
+              <button class="btn btn--filter btn--clear-all">
+                Clear Completed
+              </button>
             </div>
             <div class="filters filters--mobile">
               <button class="btn btn--filter">All</button>

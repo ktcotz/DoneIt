@@ -12,8 +12,10 @@ export enum TodoStatus {
 }
 
 export class TodoList extends UI {
-  private parentElement =
+  private parentElement = document.querySelector<HTMLDivElement>("[data-list]");
+  private todosContainer =
     document.querySelector<HTMLDivElement>("[data-container]");
+  private todosItemsCountElement = document.querySelector("[data-items-left]");
   private todos: TodoSchemaType[] = [];
   private storage = new Storage<TodoSchemaType[]>();
   private storage_key = "todos";
@@ -49,6 +51,10 @@ export class TodoList extends UI {
 
         this.deleteTodo(id);
       }
+
+      if (target.classList.contains("btn--clear-all")) {
+        this.clearAllCompletedTodos();
+      }
     });
   }
 
@@ -61,7 +67,7 @@ export class TodoList extends UI {
   }
 
   private setEmptyTodosContainer() {
-    if (!this.parentElement) return;
+    if (!this.todosContainer) return;
 
     const emptyContent = /* HTML */ `
       <div class="todo-list__item">
@@ -69,18 +75,19 @@ export class TodoList extends UI {
       </div>
     `;
 
-    this.parentElement.insertAdjacentHTML("afterbegin", emptyContent);
+    this.todosContainer.insertAdjacentHTML("afterbegin", emptyContent);
   }
 
   private renderTodos() {
-    this.clearElement(this.parentElement);
+    this.setTodosCount();
+    this.clearElement(this.todosContainer);
 
     if (this.todos.length === 0) {
       return this.setEmptyTodosContainer();
     }
 
     this.todos.forEach((todo) => {
-      this.parentElement?.insertAdjacentHTML(
+      this.todosContainer?.insertAdjacentHTML(
         "afterbegin",
         new Todo(todo).renderContent()
       );
@@ -112,6 +119,20 @@ export class TodoList extends UI {
         : todo
     );
 
+    this.storage.saveToStorage(this.storage_key, this.todos);
+    this.renderTodos();
+  }
+
+  private setTodosCount() {
+    if (!this.todosItemsCountElement) return;
+
+    this.todosItemsCountElement.textContent = `${this.todos.length}`;
+  }
+
+  private clearAllCompletedTodos() {
+    this.todos = this.todos.filter(
+      (todo) => todo.status !== TodoStatus.Complete
+    );
     this.storage.saveToStorage(this.storage_key, this.todos);
     this.renderTodos();
   }
