@@ -31,6 +31,17 @@ export class Todo {
           >
             <img src="./assets/images/icon-edit.svg" alt="" class="btn__icon" />
           </button>
+          <button
+            class="btn btn--action btn--global-delete"
+            aria-label="Delete todo"
+            data-handle-item="${this.todo.id}"
+          >
+            <img
+              src="./assets/images/icon-cross.svg"
+              alt=""
+              class="btn__icon"
+            />
+          </button>
         </div>
       </div>
     `;

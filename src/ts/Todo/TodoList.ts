@@ -43,6 +43,12 @@ export class TodoList extends UI {
 
         this.editTodo(id);
       }
+
+      if (target.classList.contains("btn--global-delete")) {
+        const id = target.getAttribute("data-handle-item");
+
+        this.deleteTodo(id);
+      }
     });
   }
 
@@ -110,7 +116,7 @@ export class TodoList extends UI {
     this.renderTodos();
   }
 
-  handleEditModal(id: string) {
+  private handleEditModal(id: string) {
     const titleElement = document.querySelector<HTMLInputElement>(
       "[data-modal-todo-title]"
     );
@@ -134,6 +140,13 @@ export class TodoList extends UI {
     this.renderTodos();
   }
 
+  private handleDeleteModal(id: string) {
+    this.todos = this.todos.filter((todo) => todo.id !== id);
+    this.storage.saveToStorage(this.storage_key, this.todos);
+    this.modal.closeModal();
+    this.renderTodos();
+  }
+
   editTodo(id: string | null) {
     if (!id) return;
 
@@ -145,6 +158,20 @@ export class TodoList extends UI {
       title: `Edit todo : ${id}`,
       content: this.generateEditTodoModalContent(todo),
       confirmFunction: () => this.handleEditModal(id),
+    });
+  }
+
+  deleteTodo(id: string | null) {
+    if (!id) return;
+
+    const todo = this.getTodoByID(id);
+
+    if (!todo) return;
+
+    this.modal.openModal({
+      title: `Delete todo : ${id}`,
+      content: this.generateDeleteTodoModalContent(),
+      confirmFunction: () => this.handleDeleteModal(id),
     });
   }
 
@@ -195,5 +222,14 @@ export class TodoList extends UI {
     `;
 
     return editTodoModalContent;
+  }
+
+  private generateDeleteTodoModalContent() {
+    const deleteTodoModalContent = /* HTML */ `
+      <p>Are you sure you want to delete this task?</p>
+      <p><strong>Action is irreversible!</strong></p>
+    `;
+
+    return deleteTodoModalContent;
   }
 }
