@@ -2,7 +2,9 @@ import { Storage } from "../Storage/Storage";
 import { Modal } from "../UI/Modal";
 import { UI } from "../UI/UI";
 import { Todo } from "./Todo";
-import { TodoSchemaType } from "./TodoSchema";
+import { TodoSchema, TodoSchemaType } from "./TodoSchema";
+import { selectOptions } from "./data";
+import { isValidStatus } from "./helpers";
 
 export enum TodoStatus {
   Active = "active",
@@ -108,9 +110,90 @@ export class TodoList extends UI {
     this.renderTodos();
   }
 
+  handleEditModal(id: string) {
+    const titleElement = document.querySelector<HTMLInputElement>(
+      "[data-modal-todo-title]"
+    );
+    const statusElement = document.querySelector<HTMLSelectElement>(
+      "[data-modal-todo-status]"
+    );
+
+    if (!titleElement || !statusElement) return;
+    if (!titleElement.value) return;
+    if (!isValidStatus(statusElement.value)) return;
+
+    const todo = this.getTodoByID(id);
+
+    if (!todo) return;
+
+    todo.title = titleElement.value;
+    todo.status = statusElement.value;
+
+    this.storage.saveToStorage(this.storage_key, this.todos);
+    this.modal.closeModal();
+    this.renderTodos();
+  }
+
   editTodo(id: string | null) {
     if (!id) return;
 
-    this.modal.openModal();
+    const todo = this.getTodoByID(id);
+
+    if (!todo) return;
+
+    this.modal.openModal({
+      title: `Edit todo : ${id}`,
+      content: this.generateEditTodoModalContent(todo),
+      confirmFunction: () => this.handleEditModal(id),
+    });
+  }
+
+  private getTodoByID(id: string) {
+    const todo = this.todos.find((todo) => todo.id === id);
+
+    if (!todo) return;
+
+    return todo;
+  }
+
+  private generateEditTodoModalContent(todo: TodoSchemaType) {
+    const editTodoModalContent = /* HTML */ `
+      <div class="modal__edit">
+        <div class="form__input-container">
+          <input
+            type="text"
+            class="form__input modal__input"
+            id="modal-todo"
+            data-modal-todo-title
+            required
+            maxlength="50"
+            value="${todo.title}"
+          />
+          <label for="modal-todo" class="form__label">Edit todo name...</label>
+        </div>
+        <div class="form__edit-modal">
+          <select
+            name="status"
+            id="status"
+            class="form__select"
+            value=${todo.status}
+            data-modal-todo-status
+            aria-label="Change todo status"
+          >
+            ${selectOptions.map(
+              (option) =>
+                `<option value=${option.value} ${
+                  option.value === todo.status ? "selected" : ""
+                }>${option.title}</option>`
+            )}
+          </select>
+          <label for="status" class="visually-hidden"
+            >Edit todo status...</label
+          >
+        </div>
+      </div>
+    `;
+
+    return editTodoModalContent;
   }
 }

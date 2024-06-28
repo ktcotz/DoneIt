@@ -35,8 +35,18 @@
     border-bottom: 1px solid var(--color-border);
   }
 
+  &__edit {
+    display: flex;
+    flex-direction: column;
+    gap: var(--large-fs);
+  }
+
   &__content {
     padding-top: var(--2xl-fs);
+  }
+
+  &__input {
+    background-color: #171823;
   }
 
   &__description {

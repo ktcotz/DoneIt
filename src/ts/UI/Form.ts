@@ -51,7 +51,7 @@ export class Form {
       const validTodoData = TodoSchema.parse({
         title,
         status,
-        id: Math.random().toString(),
+        id: Math.random().toString().slice(0, 10),
       });
 
       return validTodoData;
