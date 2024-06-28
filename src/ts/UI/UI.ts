@@ -1,6 +1,26 @@
 import { TodoStatus } from "../Todo/TodoList";
 
 export class UI {
+  clearElement<T extends HTMLElement>(element: T | null) {
+    if (!element) return;
+
+    element.innerHTML = "";
+  }
+
+  clearInputs(inputs: (HTMLInputElement | null)[]) {
+    inputs.forEach((input) => {
+      if (!input) return;
+
+      input.value = "";
+    });
+  }
+
+  setElementFocus<T extends HTMLElement>(element: T | null) {
+    if (!element) return;
+
+    element.focus();
+  }
+
   manageTodoButtonUI(button: HTMLButtonElement, status: TodoStatus) {
     button.setAttribute(
       "aria-label",
@@ -16,21 +36,5 @@ export class UI {
       button?.classList.remove("btn--complete");
       button.innerHTML = "&nbsp;";
     }
-  }
-
-  clearElement<T extends HTMLElement>(element: T | null) {
-    if (!element) return;
-
-    element.innerHTML = "";
-  }
-
-  clearInputs(inputs: HTMLInputElement[]) {
-    inputs.forEach((input) => (input.value = ""));
-  }
-
-  setElementFocus<T extends HTMLElement>(element: T | null) {
-    if (!element) return;
-
-    element.focus();
   }
 }

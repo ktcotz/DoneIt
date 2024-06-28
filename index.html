@@ -162,7 +162,11 @@
           <div class="modal__inner" data-modal-content>
             <header class="modal__header">
               <h2 class="modal__title" data-modal-title>Delete todo</h2>
-              <button class="btn btn--modal" aria-label="Close modal">
+              <button
+                class="btn btn--modal"
+                data-modal-close
+                aria-label="Close modal"
+              >
                 <img
                   src="./assets/images/icon-cross.svg"
                   alt=""
@@ -173,8 +177,15 @@
             <div class="modal__content">
               <div class="modal__description" data-modal-description></div>
               <div class="modal__buttons">
-                <button class="btn btn--general btn--close">Close</button>
-                <button class="btn btn--general btn--confirm">Confirm</button>
+                <button class="btn btn--general btn--close" data-modal-close>
+                  Close
+                </button>
+                <button
+                  class="btn btn--general btn--confirm"
+                  data-modal-confirm
+                >
+                  Confirm
+                </button>
               </div>
             </div>
           </div>

@@ -6,19 +6,26 @@ import { TodoListServices } from "../Todo/TodoListServices";
 
 export class Form {
   private formElement = document.querySelector("[data-form]");
-  private formError =
-    document.querySelector<HTMLParagraphElement>("[data-form-error]");
-  private submitButton =
-    document.querySelector<HTMLButtonElement>("[data-form-submit]");
+  private formElements = {
+    todoTitle: document.querySelector<HTMLInputElement>(
+      "[data-form-todo-title]"
+    ),
+    todoStatus: document.querySelector<HTMLButtonElement>(
+      "[data-form-todo-status]"
+    ),
 
-  private todoStatusElement = document.querySelector<HTMLButtonElement>(
-    "[data-form-todo-status]"
-  );
-  private todoTitleElement = document.querySelector<HTMLInputElement>(
-    "[data-form-todo-title]"
-  );
+    error: document.querySelector<HTMLParagraphElement>("[data-form-error]"),
+    submitButton:
+      document.querySelector<HTMLButtonElement>("[data-form-submit]"),
+  };
 
   private todoStatus = TodoStatus.Active;
+
+  private config = {
+    ERROR_CLASS: "form--error",
+    BTN_SUCCESS_CLASS: "btn--success",
+    SUCCESS_SECONDS_TIMEOUT: 1000,
+  };
 
   private ui = new UI();
 
@@ -26,25 +33,25 @@ export class Form {
 
   initialize() {
     this.addEventListeners();
-    this.ui.setElementFocus(this.todoTitleElement);
+    this.ui.setElementFocus(this.formElements.todoTitle);
   }
 
   private hideError() {
-    this.formElement?.classList.remove("form--error");
-    this.ui.clearElement(this.formError);
+    this.formElement?.classList.remove(this.config.ERROR_CLASS);
+    this.ui.clearElement(this.formElements.error);
   }
 
   private setFormError(message: string) {
-    if (!this.formError) return;
+    if (!this.formElements.error) return;
 
-    this.formElement?.classList.add("form--error");
-    this.formError.textContent = message;
+    this.formElement?.classList.add(this.config.ERROR_CLASS);
+    this.formElements.error.textContent = message;
   }
 
   private getFormValues() {
-    if (!this.todoStatusElement || !this.todoTitleElement) return;
+    if (!this.formElements.todoTitle || !this.formElements.todoStatus) return;
 
-    const title = this.todoTitleElement.value;
+    const title = this.formElements.todoTitle.value;
     const status = this.todoStatus;
 
     try {
@@ -64,21 +71,25 @@ export class Form {
   }
 
   private setSuccessSubmitButton() {
-    if (!this.submitButton) return;
+    if (!this.formElements.submitButton) return;
 
-    const content = this.submitButton.querySelector("[data-submit-content]");
+    const content = this.formElements.submitButton.querySelector(
+      "[data-submit-content]"
+    );
 
     if (!content) return;
 
     content.textContent = "Success!";
-    this.submitButton?.classList.add("btn--success");
-
-    const SUCCESS_SECONDS_TIMEOUT = 1000;
+    this.formElements.submitButton?.classList.add(
+      this.config.BTN_SUCCESS_CLASS
+    );
 
     setTimeout(() => {
       content.textContent = "Add todo";
-      this.submitButton?.classList.remove("btn--success");
-    }, SUCCESS_SECONDS_TIMEOUT);
+      this.formElements.submitButton?.classList.remove(
+        this.config.BTN_SUCCESS_CLASS
+      );
+    }, this.config.SUCCESS_SECONDS_TIMEOUT);
   }
 
   private handleAddTodo() {
@@ -90,20 +101,18 @@ export class Form {
 
     this.hideError();
     this.setSuccessSubmitButton();
-
-    if (!this.todoTitleElement) return;
-    this.ui.clearInputs([this.todoTitleElement]);
+    this.ui.clearInputs([this.formElements.todoTitle]);
   }
 
   private changeTodoStatus() {
-    if (!this.todoStatusElement) return;
+    if (!this.formElements.todoStatus) return;
 
     this.todoStatus =
       this.todoStatus === TodoStatus.Active
         ? TodoStatus.Complete
         : TodoStatus.Active;
 
-    this.ui.manageTodoButtonUI(this.todoStatusElement, this.todoStatus);
+    this.ui.manageTodoButtonUI(this.formElements.todoStatus, this.todoStatus);
   }
 
   private addEventListeners() {
@@ -113,7 +122,7 @@ export class Form {
       this.handleAddTodo();
     });
 
-    this.todoStatusElement?.addEventListener("click", () => {
+    this.formElements.todoStatus?.addEventListener("click", () => {
       this.changeTodoStatus();
     });
   }

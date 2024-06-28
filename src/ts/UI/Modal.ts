@@ -5,20 +5,29 @@ export class Modal extends UI {
   private parentElement = document.querySelector<HTMLDivElement>(
     "[data-global-modal]"
   );
+  private modalElements = {
+    overlay: document.querySelector("[data-overlay]"),
+    title: document.querySelector("[data-modal-title]"),
+    description: document.querySelector<HTMLDivElement>(
+      "[data-modal-description]"
+    ),
+  };
 
-  private overlay = document.querySelector("[data-overlay]");
-  private modalTitle = document.querySelector("[data-modal-title]");
-  private modalDescription = document.querySelector<HTMLDivElement>(
-    "[data-modal-description]"
-  );
   private trap: focusTrap.FocusTrap | null = null;
-  private transition_time = 300;
   private confirmFunction: Function | null = null;
+
+  private config = {
+    DATA_ATTRIBUTE_CLOSE_MODAL: "data-modal-close",
+    DATA_ATTRIBUTE_CONFIRM_MODAL: "data-modal-confirm",
+    KEY_TO_CLOSE_MODAL: "Escape",
+    MODAL_HIDDEN_CLASS: "modal-hidden",
+    transition_time: 300,
+  };
 
   constructor() {
     super();
-    this.initTrap();
 
+    this.initTrap();
     this.addEventListeners();
   }
 
@@ -28,33 +37,39 @@ export class Modal extends UI {
     this.trap = focusTrap.createFocusTrap(this.parentElement);
   }
 
+  private isValidModalAndKeyToCloseModal(key: string) {
+    const isEscape = key === this.config.KEY_TO_CLOSE_MODAL;
+
+    if (!isEscape) return false;
+
+    if (this.parentElement?.classList.contains(this.config.MODAL_HIDDEN_CLASS))
+      return false;
+
+    return true;
+  }
+
   private addEventListeners() {
     this.parentElement?.addEventListener("click", ({ target }) => {
       if (!(target instanceof HTMLButtonElement)) return;
 
-      if (target.classList.contains("btn--modal")) {
+      if (target.hasAttribute(this.config.DATA_ATTRIBUTE_CLOSE_MODAL)) {
         this.closeModal();
       }
 
-      if (target.classList.contains("btn--close")) {
-        this.closeModal();
-      }
-
-      if (target.classList.contains("btn--confirm")) {
+      if (target.hasAttribute(this.config.DATA_ATTRIBUTE_CONFIRM_MODAL)) {
         this.confirmAction();
       }
     });
 
     document.body.addEventListener("keydown", ({ key }) => {
-      if (
-        key === "Escape" &&
-        !this.parentElement?.classList.contains("modal-hidden")
-      ) {
+      if (this.isValidModalAndKeyToCloseModal(key)) {
         this.closeModal();
       }
     });
 
-    this.overlay?.addEventListener("click", this.closeModal.bind(this));
+    this.modalElements.overlay?.addEventListener("click", () => {
+      this.closeModal();
+    });
   }
 
   openModal({
@@ -66,21 +81,21 @@ export class Modal extends UI {
     content: string;
     confirmFunction: (id?: string) => void;
   }) {
-    this.clearElement(this.modalDescription);
+    this.clearElement(this.modalElements.description);
     document.body.setAttribute("data-modal", "true");
     this.parentElement?.classList.remove("modal-hidden");
 
-    if (!this.modalTitle) return;
-    this.modalTitle.textContent = title;
+    if (!this.modalElements.title) return;
+    this.modalElements.title.textContent = title;
 
-    if (!this.modalDescription) return;
-    this.modalDescription?.insertAdjacentHTML("afterbegin", content);
+    if (!this.modalElements.description) return;
+    this.modalElements.description?.insertAdjacentHTML("afterbegin", content);
 
     this.confirmFunction = confirmFunction;
 
     setTimeout(() => {
       this.trap?.activate();
-    }, this.transition_time);
+    }, this.config.transition_time);
   }
 
   closeModal() {

@@ -1,3 +1,5 @@
-5. Dnd
+GLOBALNY REFAKTORING!
 
-6. Globalny refaktor aplikacji.
+ZROBIONE:
+
+Main.ts,App.ts.UI.ts,Form.ts
