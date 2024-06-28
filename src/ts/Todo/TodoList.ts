@@ -1,3 +1,4 @@
+import { Filter } from "../Filter/Filter";
 import { Storage } from "../Storage/Storage";
 import { Modal } from "../UI/Modal";
 import { UI } from "../UI/UI";
@@ -20,6 +21,7 @@ export class TodoList extends UI {
   private storage = new Storage<TodoSchemaType[]>();
   private storage_key = "todos";
   private modal = new Modal();
+  private filter = new Filter();
 
   constructor() {
     super();
@@ -79,14 +81,26 @@ export class TodoList extends UI {
   }
 
   private renderTodos() {
-    this.setTodosCount();
     this.clearElement(this.todosContainer);
 
-    if (this.todos.length === 0) {
+    console.log(this.filter.global_filter);
+
+    const filteredTodos =
+      this.filter.global_filter === "all"
+        ? this.todos
+        : this.todos.filter(
+            (todo) => todo.status === this.filter.global_filter
+          );
+
+    console.log(filteredTodos);
+
+    if (filteredTodos.length === 0) {
       return this.setEmptyTodosContainer();
     }
 
-    this.todos.forEach((todo) => {
+    this.setTodosCount(filteredTodos);
+
+    filteredTodos.forEach((todo) => {
       this.todosContainer?.insertAdjacentHTML(
         "afterbegin",
         new Todo(todo).renderContent()
@@ -123,16 +137,18 @@ export class TodoList extends UI {
     this.renderTodos();
   }
 
-  private setTodosCount() {
+  private setTodosCount(todos: TodoSchemaType[]) {
     if (!this.todosItemsCountElement) return;
 
-    this.todosItemsCountElement.textContent = `${this.todos.length}`;
+    this.todosItemsCountElement.textContent = `${todos.length}`;
   }
 
   private clearAllCompletedTodos() {
     this.todos = this.todos.filter(
       (todo) => todo.status !== TodoStatus.Complete
     );
+
+    this.filter.setFilterToURL("all");
     this.storage.saveToStorage(this.storage_key, this.todos);
     this.renderTodos();
   }

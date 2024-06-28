@@ -131,18 +131,26 @@
                 <span data-items-left>0</span> items left
               </p>
               <div class="filters">
-                <button class="btn btn--filter">All</button>
-                <button class="btn btn--filter">Active</button>
-                <button class="btn btn--filter">Completed</button>
+                <button class="btn btn--filter" data-filter="all">All</button>
+                <button class="btn btn--filter" data-filter="active">
+                  Active
+                </button>
+                <button class="btn btn--filter" data-filter="complete">
+                  Completed
+                </button>
               </div>
               <button class="btn btn--filter btn--clear-all">
                 Clear Completed
               </button>
             </div>
             <div class="filters filters--mobile">
-              <button class="btn btn--filter">All</button>
-              <button class="btn btn--filter">Active</button>
-              <button class="btn btn--filter">Completed</button>
+              <button class="btn btn--filter" data-filter="all">All</button>
+              <button class="btn btn--filter" data-filter="active">
+                Active
+              </button>
+              <button class="btn btn--filter" data-filter="complete">
+                Completed
+              </button>
             </div>
           </div>
           <p class="main__addition">Drag and drop to reorder list</p>
