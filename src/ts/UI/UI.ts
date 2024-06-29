@@ -1,4 +1,4 @@
-import { TodoStatus } from "../Todo/TodoList";
+import { TodoStatus } from "../Todo/TodoSchema";
 
 export class UI {
   protected clearElement<T extends HTMLElement>(element: T | null) {
