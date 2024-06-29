@@ -3,24 +3,33 @@ import { Storage } from "../Storage/Storage";
 import { Modal } from "../UI/Modal";
 import { UI } from "../UI/UI";
 import { Todo } from "./Todo";
-import { TodoSchemaType } from "./TodoSchema";
-import { selectOptions } from "./data";
-import { isValidStatus } from "./helpers";
+import { TodoDOMHelper } from "./TodoDOMHelper";
+import { TodoDataSchema, TodoSchemaType, TodoStatus } from "./TodoSchema";
 import Sortable from "sortablejs";
-
-export enum TodoStatus {
-  Active = "active",
-  Complete = "complete",
-}
 
 export class TodoList extends UI {
   private parentElement = document.querySelector<HTMLDivElement>("[data-list]");
-  private todosContainer =
-    document.querySelector<HTMLDivElement>("[data-container]");
-  private todosItemsCountElement = document.querySelector("[data-items-left]");
+
+  private todoListElements = {
+    container: document.querySelector<HTMLDivElement>("[data-container]"),
+    count: document.querySelector("[data-items-left]"),
+  };
+
+  private config = {
+    DATA_ATTRIBUTION_TODO_ITEM: "data-item",
+    DATA_ATTRIBUTION_CHANGE_TODO_STATUS: "data-edit-button",
+    DATA_ATTRIBUTION_EDIT_TODO: "data-global-edit",
+    DATA_ATTRIBUTION_DELETE_TODO: "data-global-delete",
+    DATA_ATTRIBUTION_DELETE_ALL_COMPLETED_TODO: "data-clear-all",
+    DATA_ATTRIBUTION_BUTTON_DESCRIBED_TODO: "data-handle-item",
+    SORTABLE_ANIMATION_TIME: 150,
+    storage_key: "todos",
+  };
+
   private todos: TodoSchemaType[] = [];
+
+  private todo_dom_helper = new TodoDOMHelper();
   private storage = new Storage<TodoSchemaType[]>();
-  private storage_key = "todos";
   private modal = new Modal();
   private filter = new Filter();
 
@@ -35,85 +44,63 @@ export class TodoList extends UI {
   }
 
   private initSortable() {
-    if (!this.todosContainer) return;
+    if (!this.todoListElements.container) return;
 
-    Sortable.create(this.todosContainer, {
-      animation: 150,
+    Sortable.create(this.todoListElements.container, {
+      animation: this.config.SORTABLE_ANIMATION_TIME,
       onEnd: () => {
-        this.reorderTodosInStorage();
+        this.reorderSortableTodosInStorage();
       },
     });
   }
 
-  private reorderTodosInStorage() {
-    if (!this.todosContainer) return;
-
-    const todoItems = [...this.todosContainer.querySelectorAll("[data-item]")];
-
-    const todoIds = todoItems.map(
-      (todoItem) => todoItem.getAttribute("data-item") as NonNullable<string>
-    );
-
-    const todos = todoIds.map((todoID) => {
-      const todo = this.getTodoByID(todoID) as TodoSchemaType;
-      return todo;
-    });
-
+  private mutateTodosAndRender(todos: TodoSchemaType[]) {
     this.todos = todos;
-    this.storage.saveToStorage(this.storage_key, this.todos);
+    this.storage.saveToStorage(this.config.storage_key, this.todos);
     this.renderTodos();
   }
 
   private addEventListeners() {
     this.parentElement?.addEventListener("click", ({ target }) => {
       if (!(target instanceof HTMLButtonElement)) return;
+      const id = target.getAttribute(
+        this.config.DATA_ATTRIBUTION_BUTTON_DESCRIBED_TODO
+      );
 
-      if (target.classList.contains("btn--edit")) {
-        const id = target.getAttribute("data-handle-item");
-
+      if (
+        target.hasAttribute(this.config.DATA_ATTRIBUTION_CHANGE_TODO_STATUS)
+      ) {
         this.editTodoStatus(id);
       }
 
-      if (target.classList.contains("btn--global-edit")) {
-        const id = target.getAttribute("data-handle-item");
-
+      if (target.hasAttribute(this.config.DATA_ATTRIBUTION_EDIT_TODO)) {
         this.editTodo(id);
       }
 
-      if (target.classList.contains("btn--global-delete")) {
-        const id = target.getAttribute("data-handle-item");
-
+      if (target.hasAttribute(this.config.DATA_ATTRIBUTION_DELETE_TODO)) {
         this.deleteTodo(id);
       }
 
-      if (target.classList.contains("btn--clear-all")) {
+      if (
+        target.hasAttribute(
+          this.config.DATA_ATTRIBUTION_DELETE_ALL_COMPLETED_TODO
+        )
+      ) {
         this.clearAllCompletedTodos();
       }
     });
   }
 
   private getInitialTodos() {
-    const todos = this.storage.getFromStorage(this.storage_key);
+    const todos = this.storage.getFromStorage(this.config.storage_key);
 
     if (!todos) return;
 
     this.todos = todos;
   }
 
-  private setEmptyTodosContainer() {
-    if (!this.todosContainer) return;
-
-    const emptyContent = /* HTML */ `
-      <div class="todo-list__item">
-        <p class="todo-list__empty">No tasks found.</p>
-      </div>
-    `;
-
-    this.todosContainer.insertAdjacentHTML("afterbegin", emptyContent);
-  }
-
   private renderTodos() {
-    this.clearElement(this.todosContainer);
+    this.clearElement(this.todoListElements.container);
 
     const filteredTodos =
       this.filter.global_filter === "all"
@@ -123,13 +110,15 @@ export class TodoList extends UI {
           );
 
     if (filteredTodos.length === 0) {
-      return this.setEmptyTodosContainer();
+      return this.todo_dom_helper.setEmptyTodosContainer(
+        this.todoListElements.container
+      );
     }
 
     this.setTodosCount(filteredTodos);
 
     filteredTodos.forEach((todo) => {
-      this.todosContainer?.insertAdjacentHTML(
+      this.todoListElements.container?.insertAdjacentHTML(
         "beforeend",
         new Todo(todo).renderContent()
       );
@@ -138,18 +127,13 @@ export class TodoList extends UI {
 
   addTodo(data: TodoSchemaType) {
     this.todos.push(data);
-    this.storage.saveToStorage(this.storage_key, this.todos);
-    this.renderTodos();
+    this.mutateTodosAndRender(this.todos);
   }
 
   editTodoStatus(id: string | null) {
     if (!id) return;
 
-    const todo = this.todos.find((todo) => todo.id === id);
-
-    if (!todo) return;
-
-    this.todos = this.todos.map((todo) =>
+    const editedTodos = this.todos.map((todo) =>
       todo.id === id
         ? {
             ...todo,
@@ -161,24 +145,22 @@ export class TodoList extends UI {
         : todo
     );
 
-    this.storage.saveToStorage(this.storage_key, this.todos);
-    this.renderTodos();
+    this.mutateTodosAndRender(editedTodos);
   }
 
   private setTodosCount(todos: TodoSchemaType[]) {
-    if (!this.todosItemsCountElement) return;
+    if (!this.todoListElements.count) return;
 
-    this.todosItemsCountElement.textContent = `${todos.length}`;
+    this.todoListElements.count.textContent = `${todos.length}`;
   }
 
   private clearAllCompletedTodos() {
-    this.todos = this.todos.filter(
+    const uncompleteTodos = this.todos.filter(
       (todo) => todo.status !== TodoStatus.Complete
     );
 
     this.filter.setFilterToURL("all");
-    this.storage.saveToStorage(this.storage_key, this.todos);
-    this.renderTodos();
+    this.mutateTodosAndRender(uncompleteTodos);
   }
 
   private handleEditModal(id: string) {
@@ -190,26 +172,25 @@ export class TodoList extends UI {
     );
 
     if (!titleElement || !statusElement) return;
-    if (!titleElement.value) return;
-    if (!isValidStatus(statusElement.value)) return;
 
-    const todo = this.getTodoByID(id);
+    const validTodoData = TodoDataSchema.parse({
+      title: titleElement.value,
+      status: statusElement.value,
+    });
 
-    if (!todo) return;
+    const editedTodos = this.todos.map((todo) =>
+      todo.id === id ? { ...todo, ...validTodoData } : todo
+    );
 
-    todo.title = titleElement.value;
-    todo.status = statusElement.value;
-
-    this.storage.saveToStorage(this.storage_key, this.todos);
     this.modal.closeModal();
-    this.renderTodos();
+    this.mutateTodosAndRender(editedTodos);
   }
 
   private handleDeleteModal(id: string) {
-    this.todos = this.todos.filter((todo) => todo.id !== id);
-    this.storage.saveToStorage(this.storage_key, this.todos);
+    const newTodos = this.todos.filter((todo) => todo.id !== id);
+
     this.modal.closeModal();
-    this.renderTodos();
+    this.mutateTodosAndRender(newTodos);
   }
 
   editTodo(id: string | null) {
@@ -221,7 +202,7 @@ export class TodoList extends UI {
 
     this.modal.openModal({
       title: `Edit todo : ${id}`,
-      content: this.generateEditTodoModalContent(todo),
+      content: this.todo_dom_helper.generateEditTodoModalContent(todo),
       confirmFunction: () => this.handleEditModal(id),
     });
   }
@@ -229,13 +210,9 @@ export class TodoList extends UI {
   deleteTodo(id: string | null) {
     if (!id) return;
 
-    const todo = this.getTodoByID(id);
-
-    if (!todo) return;
-
     this.modal.openModal({
       title: `Delete todo : ${id}`,
-      content: this.generateDeleteTodoModalContent(),
+      content: this.todo_dom_helper.generateDeleteTodoModalContent(),
       confirmFunction: () => this.handleDeleteModal(id),
     });
   }
@@ -248,53 +225,27 @@ export class TodoList extends UI {
     return todo;
   }
 
-  private generateEditTodoModalContent(todo: TodoSchemaType) {
-    const editTodoModalContent = /* HTML */ `
-      <div class="modal__edit">
-        <div class="form__input-container">
-          <input
-            type="text"
-            class="form__input modal__input"
-            id="modal-todo"
-            data-modal-todo-title
-            required
-            maxlength="50"
-            value="${todo.title}"
-          />
-          <label for="modal-todo" class="form__label">Edit todo name...</label>
-        </div>
-        <div class="form__edit-modal">
-          <select
-            name="status"
-            id="status"
-            class="form__select"
-            value=${todo.status}
-            data-modal-todo-status
-            aria-label="Change todo status"
-          >
-            ${selectOptions.map(
-              (option) =>
-                `<option value=${option.value} ${
-                  option.value === todo.status ? "selected" : ""
-                }>${option.title}</option>`
-            )}
-          </select>
-          <label for="status" class="visually-hidden"
-            >Edit todo status...</label
-          >
-        </div>
-      </div>
-    `;
+  private reorderSortableTodosInStorage() {
+    if (!this.todoListElements.container) return;
 
-    return editTodoModalContent;
-  }
+    const todoItems = [
+      ...this.todoListElements.container.querySelectorAll<HTMLDivElement>(
+        `[${this.config.DATA_ATTRIBUTION_TODO_ITEM}]`
+      ),
+    ];
 
-  private generateDeleteTodoModalContent() {
-    const deleteTodoModalContent = /* HTML */ `
-      <p>Are you sure you want to delete this task?</p>
-      <p><strong>Action is irreversible!</strong></p>
-    `;
+    const todoIds = todoItems.map((todo) => {
+      const id = todo.getAttribute(
+        this.config.DATA_ATTRIBUTION_TODO_ITEM
+      ) as NonNullable<string>;
+      return id;
+    });
 
-    return deleteTodoModalContent;
+    const todos = todoIds.map((todoID) => {
+      const todo = this.getTodoByID(todoID) as TodoSchemaType;
+      return todo;
+    });
+
+    this.mutateTodosAndRender(todos);
   }
 }

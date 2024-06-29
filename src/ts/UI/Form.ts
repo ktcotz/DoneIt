@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { UI } from "./UI";
-import { TodoSchema } from "../Todo/TodoSchema";
-import { TodoStatus } from "../Todo/TodoList";
+import { TodoSchema, TodoStatus } from "../Todo/TodoSchema";
 import { TodoListServices } from "../Todo/TodoListServices";
 
 export class Form extends UI {

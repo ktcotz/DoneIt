@@ -17,6 +17,7 @@ export class Todo {
             : ""}"
           aria-label="Change todo status"
           data-handle-item="${this.todo.id}"
+          data-edit-button
         >
           ${this.todo.status === "complete"
             ? `<img src="./assets/images/icon-check.svg" alt="" class="btn__image" />`
@@ -28,6 +29,7 @@ export class Todo {
             class="btn btn--action btn--global-edit"
             aria-label="Edit todo"
             data-handle-item="${this.todo.id}"
+            data-global-edit
           >
             <img src="./assets/images/icon-edit.svg" alt="" class="btn__icon" />
           </button>
@@ -35,6 +37,7 @@ export class Todo {
             class="btn btn--action btn--global-delete"
             aria-label="Delete todo"
             data-handle-item="${this.todo.id}"
+            data-global-delete
           >
             <img
               src="./assets/images/icon-cross.svg"
