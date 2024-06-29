@@ -139,6 +139,10 @@
     }
   }
 
+  &__image {
+    pointer-events: none;
+  }
+
   &__icon {
     &--action {
       pointer-events: none;

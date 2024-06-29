@@ -48,6 +48,8 @@ export class TodoList extends UI {
 
     Sortable.create(this.todoListElements.container, {
       animation: this.config.SORTABLE_ANIMATION_TIME,
+      touchStartThreshold: 6,
+
       onEnd: () => {
         this.reorderSortableTodosInStorage();
       },
