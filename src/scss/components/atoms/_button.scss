@@ -145,6 +145,12 @@
 
   &__icon {
     pointer-events: none;
+
+    &--action {
+      @include media($bp-mobile) {
+        display: flex;
+      }
+    }
   }
 }
 

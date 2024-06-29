@@ -31,7 +31,11 @@ export class Todo {
             data-handle-item="${this.todo.id}"
             data-global-edit
           >
-            <img src="./assets/images/icon-edit.svg" alt="" class="btn__icon" />
+            <img
+              src="./assets/images/icon-edit.svg"
+              alt=""
+              class="btn__icon btn__icon--action"
+            />
           </button>
           <button
             class="btn btn--action btn--global-delete"
@@ -42,7 +46,7 @@ export class Todo {
             <img
               src="./assets/images/icon-cross.svg"
               alt=""
-              class="btn__icon"
+              class="btn__icon btn__icon--action"
             />
           </button>
         </div>
