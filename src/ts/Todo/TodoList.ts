@@ -91,6 +91,10 @@ export class TodoList extends UI {
         this.clearAllCompletedTodos();
       }
     });
+
+    window.addEventListener("popstate", () => {
+      this.renderTodos();
+    });
   }
 
   private getInitialTodos() {

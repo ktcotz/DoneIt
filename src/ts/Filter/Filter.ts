@@ -1,5 +1,4 @@
 import { FilterSchema, FilterSchemaType } from "./FilterSchema";
-import queryString from "query-string";
 
 export class Filter {
   private parentElements = document.querySelectorAll(".filters");
@@ -66,19 +65,22 @@ export class Filter {
   }
 
   private loadFilterFromURL() {
-    const parsed = queryString.parse(location.search);
-    const isValidFilter = FilterSchema.parse(parsed.filter);
+    const params = new URLSearchParams(location.search);
+    const filter = params.get("filter");
+
+    if (!filter) return;
+
+    const isValidFilter = FilterSchema.parse(filter);
 
     this.global_filter = isValidFilter;
   }
 
   setFilterToURL(filter: FilterSchemaType) {
-    const parsed = queryString.parse(location.search);
+    const newUrl = `${window.location.pathname}?filter=${filter}`;
 
-    parsed.filter = filter ? filter : this.global_filter;
+    history.pushState(null, "", newUrl);
 
-    const stringified = queryString.stringify(parsed);
-
-    location.search = stringified;
+    const popStateEvent = new PopStateEvent("popstate", { state: { filter } });
+    dispatchEvent(popStateEvent);
   }
 }
