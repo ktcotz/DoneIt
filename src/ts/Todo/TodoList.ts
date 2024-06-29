@@ -115,13 +115,13 @@ export class TodoList extends UI {
             (todo) => todo.status === this.filter.global_filter
           );
 
+    this.setTodosCount(filteredTodos);
+    
     if (filteredTodos.length === 0) {
       return this.todo_dom_helper.setEmptyTodosContainer(
         this.todoListElements.container
       );
     }
-
-    this.setTodosCount(filteredTodos);
 
     filteredTodos.forEach((todo) => {
       this.todoListElements.container?.insertAdjacentHTML(
