@@ -3,7 +3,7 @@
 
 .header {
   --height: 20rem;
-  --url: url("./assets/images/bg-desktop-dark.jpg");
+  --url: url("./images/bg-desktop-dark.jpg");
 
   height: var(--height);
   background-image: var(--url);
@@ -13,16 +13,16 @@
 
   @include media($bp-medium) {
     --height: 15rem;
-    --url: url("./assets/images/bg-mobile-dark.jpg");
+    --url: url("./images/bg-mobile-dark.jpg");
   }
 }
 
 body[data-theme="light"] {
   .header {
-    --url: url("./assets/images/bg-desktop-light.jpg");
+    --url: url("./images/bg-desktop-light.jpg");
 
     @include media($bp-medium) {
-      --url: url("./assets/images/bg-mobile-light.jpg");
+      --url: url("./images/bg-mobile-light.jpg");
     }
   }
 }
