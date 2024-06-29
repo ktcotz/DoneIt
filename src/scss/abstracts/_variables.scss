@@ -1,7 +1,7 @@
 :root {
   --color-background: #171823;
   --color-background-hover: #151620;
-  --color-primary: #3a7cfd;
+  --color-primary: #6196fd;
   --color-secondary: #c058f3;
   --color-success: #3f6212;
 
@@ -39,6 +39,7 @@ body[data-theme="light"] {
   --color-filter: #494c6b;
   --color-error: #dc2626;
   --color-success: #86efac;
+  --color-primary: #2e63ca;
 }
 
 $bp-medium: 48rem;
