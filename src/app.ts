@@ -12,7 +12,6 @@ class App {
   initialize() {
     this.form.initialize();
     this.themeProvider.initialize();
-    
   }
 }
 

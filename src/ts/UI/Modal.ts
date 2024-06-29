@@ -1,6 +1,12 @@
 import * as focusTrap from "focus-trap";
 import { UI } from "./UI";
 
+type OpenModalArguments = {
+  title: string;
+  content: string;
+  confirmFunction: <T>(arg: T) => void;
+};
+
 export class Modal extends UI {
   private parentElement = document.querySelector<HTMLDivElement>(
     "[data-global-modal]"
@@ -72,25 +78,26 @@ export class Modal extends UI {
     });
   }
 
-  openModal({
-    title,
-    content,
-    confirmFunction,
-  }: {
-    title: string;
-    content: string;
-    confirmFunction: (id?: string) => void;
-  }) {
-    this.clearElement(this.modalElements.description);
-    document.body.setAttribute("data-modal", "true");
-    this.parentElement?.classList.remove("modal-hidden");
-
+  private setOpenModalContent(title: string, content: string) {
     if (!this.modalElements.title) return;
     this.modalElements.title.textContent = title;
 
     if (!this.modalElements.description) return;
     this.modalElements.description?.insertAdjacentHTML("afterbegin", content);
+  }
 
+  private confirmAction() {
+    if (!this.confirmFunction) return;
+    this.confirmFunction();
+  }
+
+  openModal({ title, content, confirmFunction }: OpenModalArguments) {
+    this.clearElement(this.modalElements.description);
+
+    document.body.setAttribute("data-modal", "true");
+    this.parentElement?.classList.remove(this.config.MODAL_HIDDEN_CLASS);
+
+    this.setOpenModalContent(title, content);
     this.confirmFunction = confirmFunction;
 
     setTimeout(() => {
@@ -99,15 +106,8 @@ export class Modal extends UI {
   }
 
   closeModal() {
-    this.parentElement?.classList.add("modal-hidden");
+    this.parentElement?.classList.add(this.config.MODAL_HIDDEN_CLASS);
     document.body.removeAttribute("data-modal");
-
     this.trap?.deactivate();
-  }
-
-  confirmAction() {
-    if (!this.confirmFunction) return;
-
-    this.confirmFunction();
   }
 }

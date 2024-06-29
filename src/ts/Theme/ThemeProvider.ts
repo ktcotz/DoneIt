@@ -1,16 +1,24 @@
 import { Storage } from "../Storage/Storage";
+import { ThemeDOMHelper } from "./ThemeDOMHelper";
 
-enum Theme {
+export enum Theme {
   Light = "light",
   Dark = "dark",
 }
 
 export class ThemeProvider {
-  private themeButton = document.querySelector("[data-theme-button]");
-  private themeButtonIcon = document.querySelector("[data-theme-icon]");
-  private currentTheme = Theme.Dark;
+  private parentElement = document.querySelector("[data-theme-button]");
+  private themeElements = {
+    icon: document.querySelector("[data-theme-icon]"),
+  };
+
+  private config = {
+    currentTheme: Theme.Dark,
+    storage_key: "theme",
+  };
+
   private storage = new Storage<Theme>();
-  private storage_key = "theme";
+  private theme_dom_helper = new ThemeDOMHelper();
 
   initialize() {
     this.addEventListeners();
@@ -18,10 +26,10 @@ export class ThemeProvider {
   }
 
   private getStorageTheme() {
-    const storageTheme = this.storage.getFromStorage(this.storage_key);
+    const storageTheme = this.storage.getFromStorage(this.config.storage_key);
 
     if (storageTheme) {
-      this.currentTheme = storageTheme;
+      this.config.currentTheme = storageTheme;
       return this.setUITheme();
     }
 
@@ -32,49 +40,38 @@ export class ThemeProvider {
     const themePreference = window.matchMedia("(prefers-color-scheme:dark)");
     const isDarkPreference = themePreference.matches;
 
-    this.currentTheme = isDarkPreference ? Theme.Dark : Theme.Light;
+    this.config.currentTheme = isDarkPreference ? Theme.Dark : Theme.Light;
 
     this.setUITheme();
   }
 
-  private setTheme() {
-    document.body.setAttribute("data-theme", this.currentTheme);
-  }
-
-  private changeThemeIcon() {
-    this.themeButtonIcon?.setAttribute(
-      "src",
-      `./assets/images/icon-${
-        this.currentTheme === Theme.Dark ? "sun" : "moon"
-      }.svg`
-    );
-  }
-
-  private changeButtonLabel() {
-    this.themeButton?.setAttribute(
-      "aria-label",
-      `Change theme to ${this.currentTheme === Theme.Dark ? "light" : "dark"}`
-    );
-  }
-
   private setUITheme() {
-    this.setTheme();
-    this.changeThemeIcon();
-    this.changeButtonLabel();
+    document.body.setAttribute("data-theme", this.config.currentTheme);
+    this.theme_dom_helper.changeThemeIcon(
+      this.themeElements.icon,
+      this.config.currentTheme
+    );
+    this.theme_dom_helper.changeButtonLabel(
+      this.parentElement,
+      this.config.currentTheme
+    );
   }
 
   private changeCurrentTheme() {
     const changedTheme =
-      this.currentTheme === Theme.Dark ? Theme.Light : Theme.Dark;
+      this.config.currentTheme === Theme.Dark ? Theme.Light : Theme.Dark;
 
-    this.currentTheme = changedTheme;
-    this.storage.saveToStorage(this.storage_key, this.currentTheme);
+    this.config.currentTheme = changedTheme;
+    this.storage.saveToStorage(
+      this.config.storage_key,
+      this.config.currentTheme
+    );
 
     this.setUITheme();
   }
 
   private addEventListeners() {
-    this.themeButton?.addEventListener("click", () => {
+    this.parentElement?.addEventListener("click", () => {
       this.changeCurrentTheme();
     });
   }

@@ -4,7 +4,7 @@ import { TodoSchema } from "../Todo/TodoSchema";
 import { TodoStatus } from "../Todo/TodoList";
 import { TodoListServices } from "../Todo/TodoListServices";
 
-export class Form {
+export class Form extends UI {
   private formElement = document.querySelector("[data-form]");
   private formElements = {
     todoTitle: document.querySelector<HTMLInputElement>(
@@ -27,18 +27,18 @@ export class Form {
     SUCCESS_SECONDS_TIMEOUT: 1000,
   };
 
-  private ui = new UI();
-
-  constructor(private todoListServices: TodoListServices) {}
+  constructor(private todoListServices: TodoListServices) {
+    super();
+  }
 
   initialize() {
     this.addEventListeners();
-    this.ui.setElementFocus(this.formElements.todoTitle);
+    this.setElementFocus(this.formElements.todoTitle);
   }
 
   private hideError() {
     this.formElement?.classList.remove(this.config.ERROR_CLASS);
-    this.ui.clearElement(this.formElements.error);
+    this.clearElement(this.formElements.error);
   }
 
   private setFormError(message: string) {
@@ -101,7 +101,7 @@ export class Form {
 
     this.hideError();
     this.setSuccessSubmitButton();
-    this.ui.clearInputs([this.formElements.todoTitle]);
+    this.clearInputs([this.formElements.todoTitle]);
   }
 
   private changeTodoStatus() {
@@ -112,7 +112,7 @@ export class Form {
         ? TodoStatus.Complete
         : TodoStatus.Active;
 
-    this.ui.manageTodoButtonUI(this.formElements.todoStatus, this.todoStatus);
+    this.manageTodoButtonUI(this.formElements.todoStatus, this.todoStatus);
   }
 
   private addEventListeners() {

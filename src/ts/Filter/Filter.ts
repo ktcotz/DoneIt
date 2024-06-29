@@ -1,36 +1,41 @@
-import { TodoStatus } from "../Todo/TodoList";
-import { isValidFilter } from "./helpers";
+import { FilterSchema, FilterSchemaType } from "./FilterSchema";
 import queryString from "query-string";
 
 export class Filter {
   private parentElements = document.querySelectorAll(".filters");
-  private filterButtons =
-    document.querySelectorAll<HTMLButtonElement>(".btn--filter");
+  private filterElements = {
+    buttons: document.querySelectorAll(".btn--filter"),
+  };
 
-  global_filter: TodoStatus | "all" = "all";
+  private config = {
+    ACTIVE_FILTER_CLASS: "btn--filter-active",
+    DATA_ATTRIBUTE_FILTER_BUTTON: "data-filter",
+  };
+
+  global_filter: FilterSchemaType = "all";
 
   constructor() {
     this.addEventListeners();
-
     this.loadFilterFromURL();
-
     this.handleFiltersButtonUI();
   }
 
   private removeFiltersButtonActiveUI() {
-    this.filterButtons?.forEach((filterButton) => {
-      filterButton?.classList.remove("btn--filter-active");
+    this.filterElements.buttons?.forEach((filterButton) => {
+      filterButton?.classList.remove(this.config.ACTIVE_FILTER_CLASS);
     });
   }
 
   private handleFiltersButtonUI() {
     this.removeFiltersButtonActiveUI();
 
-    this.filterButtons?.forEach((filterButton) => {
-      const filterState = filterButton.getAttribute("data-filter");
+    this.filterElements.buttons?.forEach((filterButton) => {
+      const filterState = filterButton.getAttribute(
+        this.config.DATA_ATTRIBUTE_FILTER_BUTTON
+      );
 
       if (filterState === this.global_filter) {
-        filterButton?.classList.add("btn--filter-active");
+        filterButton?.classList.add(this.config.ACTIVE_FILTER_CLASS);
       }
     });
   }
@@ -39,26 +44,35 @@ export class Filter {
     this.parentElements.forEach((parentElement) => {
       parentElement?.addEventListener("click", ({ target }) => {
         if (!(target instanceof HTMLButtonElement)) return;
+        if (!target.hasAttribute(this.config.DATA_ATTRIBUTE_FILTER_BUTTON))
+          return;
 
-        if (target.classList.contains("btn--filter")) {
-          this.changeFilter(target);
-          this.handleFiltersButtonUI();
-        }
+        this.changeFilter(target);
+        this.handleFiltersButtonUI();
       });
     });
   }
 
-  private loadFilterFromURL() {
-    const parsed = queryString.parse(location.search);
+  private changeFilter(target: HTMLButtonElement) {
+    const filterState = target.getAttribute(
+      this.config.DATA_ATTRIBUTE_FILTER_BUTTON
+    );
+    const isValidFilter = FilterSchema.parse(filterState);
 
-    if (!parsed.filter) return;
-    if (typeof parsed.filter !== "string") return;
-    if (!isValidFilter(parsed.filter)) return;
+    this.global_filter = isValidFilter;
 
-    this.global_filter = parsed.filter;
+    this.setFilterToURL(this.global_filter);
+    this.handleFiltersButtonUI();
   }
 
-  setFilterToURL(filter?: TodoStatus | "all") {
+  private loadFilterFromURL() {
+    const parsed = queryString.parse(location.search);
+    const isValidFilter = FilterSchema.parse(parsed.filter);
+
+    this.global_filter = isValidFilter;
+  }
+
+  setFilterToURL(filter: FilterSchemaType) {
     const parsed = queryString.parse(location.search);
 
     parsed.filter = filter ? filter : this.global_filter;
@@ -66,18 +80,5 @@ export class Filter {
     const stringified = queryString.stringify(parsed);
 
     location.search = stringified;
-  }
-
-  private changeFilter(target: HTMLButtonElement) {
-    const filterState = target.getAttribute("data-filter");
-
-    if (!filterState) return;
-
-    if (!isValidFilter(filterState)) return;
-
-    this.global_filter = filterState;
-
-    this.setFilterToURL();
-    this.handleFiltersButtonUI();
   }
 }

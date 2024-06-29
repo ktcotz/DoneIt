@@ -1,13 +1,13 @@
 import { TodoStatus } from "../Todo/TodoList";
 
 export class UI {
-  clearElement<T extends HTMLElement>(element: T | null) {
+  protected clearElement<T extends HTMLElement>(element: T | null) {
     if (!element) return;
 
     element.innerHTML = "";
   }
 
-  clearInputs(inputs: (HTMLInputElement | null)[]) {
+  protected clearInputs(inputs: (HTMLInputElement | null)[]) {
     inputs.forEach((input) => {
       if (!input) return;
 
@@ -15,13 +15,13 @@ export class UI {
     });
   }
 
-  setElementFocus<T extends HTMLElement>(element: T | null) {
+  protected setElementFocus<T extends HTMLElement>(element: T | null) {
     if (!element) return;
 
     element.focus();
   }
 
-  manageTodoButtonUI(button: HTMLButtonElement, status: TodoStatus) {
+  protected manageTodoButtonUI(button: HTMLButtonElement, status: TodoStatus) {
     button.setAttribute(
       "aria-label",
       `Change todo status to ${status === "active" ? "complete" : "active"}`
